@@ -53,6 +53,9 @@ const (
 
 	flagNameWait = "wait"
 	defaultWait  = true
+	// action/upgrade
+	// --install, --reset-values vs --reuse-values,
+	// atomic
 )
 
 type Command struct {
