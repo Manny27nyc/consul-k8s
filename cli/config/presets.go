@@ -15,12 +15,26 @@ var Presets = map[string]interface{}{
 
 const demo = `
 global:
-  name: consul
+ name: consul
+ metrics:
+   enabled: true
+   enableAgentMetrics: true
 connectInject:
-  enabled: true
+ enabled: true
+ metrics:
+   defaultEnabled: true
+   defaultEnableMerging: true
+   enableGatewayMetrics: true
 server:
-  replicas: 1
-  bootstrapExpect: 1
+ replicas: 1
+controller:
+ enabled: true
+ui:
+ enabled: true
+ service:
+   enabled: true
+prometheus:
+ enabled: true
 `
 
 // TODO: I don't know why the following hangs for me.
