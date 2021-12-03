@@ -20,8 +20,6 @@ import (
 	"github.com/hashicorp/consul-k8s/cli/config"
 	helmCLI "helm.sh/helm/v3/pkg/cli"
 
-	"github.com/hashicorp/consul-k8s/cli/cmd/install"
-
 	"github.com/hashicorp/consul-k8s/cli/cmd/common"
 	"github.com/hashicorp/consul-k8s/cli/cmd/common/flag"
 	"k8s.io/client-go/kubernetes"
@@ -300,7 +298,7 @@ func (c *Command) Run(args []string) int {
 	// Without informing the user, default global.name to consul if it hasn't been set already. We don't allow setting
 	// the release name, and since that is hardcoded to "consul", setting global.name to "consul" makes it so resources
 	// aren't double prefixed with "consul-consul-...".
-	vals = install.MergeMaps(config.Convert(config.GlobalNameConsul), vals)
+	vals = common.MergeMaps(config.Convert(config.GlobalNameConsul), vals)
 
 	// Print out the upgrade summary.
 	if !c.flagAutoApprove {
@@ -309,13 +307,13 @@ func (c *Command) Run(args []string) int {
 		c.UI.Output("Namespace: %s", foundNamespace, terminal.WithInfoStyle())
 
 		// Coalesce the user provided over-rides with the chart. This is basically what `upgrade` does anyways.
-		// newChart := install.MergeMaps(chart.Values, vals)
+		// newChart := common.MergeMaps(chart.Values, vals)
 	}
 
 	// Without informing the user, default global.name to consul if it hasn't been set already. We don't allow setting
 	// the release name, and since that is hardcoded to "consul", setting global.name to "consul" makes it so resources
 	// aren't double prefixed with "consul-consul-...".
-	vals = install.MergeMaps(config.Convert(config.GlobalNameConsul), vals)
+	vals = common.MergeMaps(config.Convert(config.GlobalNameConsul), vals)
 
 	if !c.flagAutoApprove && !c.flagDryRun {
 		confirmation, err := c.UI.Input(&terminal.Input{
@@ -462,7 +460,7 @@ func (c *Command) mergeValuesFlagsWithPrecedence(settings *helmCLI.EnvSettings) 
 	if c.flagPreset != defaultPreset {
 		// Note the ordering of the function call, presets have lower precedence than set vals.
 		presetMap := config.Presets[c.flagPreset].(map[string]interface{})
-		vals = install.MergeMaps(presetMap, vals)
+		vals = common.MergeMaps(presetMap, vals)
 	}
 	return vals, err
 }
