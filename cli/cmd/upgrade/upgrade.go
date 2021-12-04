@@ -255,7 +255,7 @@ func (c *Command) Run(args []string) int {
 	}
 
 	// Handle preset, value files, and set values logic.
-	vals, err := c.mergeValuesFlagsWithPrecedence(settings)
+	chartValues, err := c.mergeValuesFlagsWithPrecedence(settings)
 	if err != nil {
 		c.UI.Output(err.Error(), terminal.WithErrorStyle())
 		return 1
@@ -265,7 +265,7 @@ func (c *Command) Run(args []string) int {
 	// Without informing the user, default global.name to consul if it hasn't been set already. We don't allow setting
 	// the release name, and since that is hardcoded to "consul", setting global.name to "consul" makes it so resources
 	// aren't double prefixed with "consul-consul-...".
-	vals = common.MergeMaps(config.Convert(config.GlobalNameConsul), vals)
+	chartValues = common.MergeMaps(config.Convert(config.GlobalNameConsul), chartValues)
 
 	// Print out the upgrade summary.
 	if !c.flagAutoApprove {
@@ -316,7 +316,7 @@ func (c *Command) Run(args []string) int {
 	upgrade.Timeout = c.timeoutDuration
 
 	// Run the upgrade.
-	re, err := upgrade.Run(common.DefaultReleaseName, chart, vals)
+	re, err := upgrade.Run(common.DefaultReleaseName, chart, chartValues)
 	if err != nil {
 		c.UI.Output(err.Error(), terminal.WithErrorStyle())
 		return 1
